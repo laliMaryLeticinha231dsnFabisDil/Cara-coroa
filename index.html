@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cara ou Coroa</title>
+    <style>
+        canvas {
+            border: 1px solid #000;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="coinCanvas" width="200" height="200"></canvas>
+
+    <script>
+        const canvas = document.getElementById("coinCanvas");
+        const contexto = canvas.getContext("2d");
+        const moeda = new Image();
+        moeda.src = "moeda.png"; // Substitua "moeda.png" pelo caminho da sua imagem de moeda
+
+        let girando = false;
+
+        // Carrega a imagem da moeda e desenha na tela
+        moeda.onload = function() {
+            contexto.drawImage(moeda, 0, 0, canvas.width, canvas.height);
+        };
+
+        // Adiciona um evento de clique para girar a moeda
+        canvas.addEventListener("click", function() {
+            if (!girando) {
+                girarMoeda();
+            }
+        });
+
+        // Função para girar a moeda
+        function girarMoeda() {
+            if (!girando) {
+                girando = true;
+
+                // Gera um número aleatório (0 ou 1) para representar cara ou coroa
+                const resultado = Math.floor(Math.random() * 2);
+
+                // Rotação da moeda (0 graus para cara, 180 graus para coroa)
+                const rotacaoFinal = resultado === 0 ? 0 : 180;
+                let rotacaoAtual = 0;
+
+                // Animação de giro
+                const intervalo = setInterval(function() {
+                    contexto.clearRect(0, 0, canvas.width, canvas.height);
+                    contexto.save();
+                    contexto.translate(canvas.width / 2, canvas.height / 2);
+                    contexto.rotate(rotacaoAtual * Math.PI / 180);
+                    contexto.drawImage(moeda, -canvas.width / 2, -canvas.height / 2, canvas.width, canvas.height);
+                    contexto.restore();
+
+                    rotacaoAtual += 10; // Aumenta o ângulo de rotação
+                    if (rotacaoAtual >= rotacaoFinal) {
+                        clearInterval(intervalo);
+                        girando = false;
+                    }
+                }, 50);
+            }
+        }
+    </script>
+</body>
+</html>
